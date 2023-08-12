@@ -1,0 +1,68 @@
+<div>
+    <h3>Currency Exchanger</h3>
+
+    <div>
+        <form [formGroup]="conversionForm" (ngSubmit)="onConvert()">
+            <div class="row pb-3">
+                <div class="col-3">
+                    <div>
+                        <label for="amount">Amount</label>
+                        <input 
+                            formControlName="amount"
+                            id="amount"
+                            class="form-control w-auto"
+                            type="number"
+                            min="1"
+                            (change)="getCurrentAmount($event)"
+                            pattern="[0-9]+"
+                         >
+                        <span 
+                           *ngIf="!conversionForm['controls']['amount'].value"
+                            class="text-danger position-absolute" 
+                        >  
+                          Amount must be ≥ 1 
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-9 d-inline-flex">
+                    <div class="col-3">
+                        <label for="from">Form</label>
+                        <select formControlName="base" class="form-select" aria-label="Default select example">
+                            <option [value]="baseValue" selected> {{baseValue}} </option>
+                        </select>
+                    </div>
+
+                    <div class="align-self-end col-2 fs-3 text-center">
+                        <i (click)="onSwapCurrencies()" class="fa fa-exchange cursor-pointer" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="col-3">
+                        <label for="to">To</label>
+                        <select formControlName="symbol" class="form-select" aria-label="Default select example">
+                            <option [value]="symbolValue" selected> {{symbolValue}} </option>
+                        </select>
+                    </div>
+                    <div class="col-3 text-center align-self-end">
+                        <button [disabled]="!conversionForm.valid" type="submit" class="btn btn-primary w-50">Convert</button>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row mt-4 align-items-center">
+                <div class="col-3">
+                   <span class="text-success">Unit</span>: 1.00 {{baseValue}} = {{oneUnitValue}} {{symbolValue}}
+                </div>
+                <div class="col-3">
+                    <span class="text-success">
+                        Result <i *ngIf="!conversionResult" class="fa fa-exclamation-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="You must press on convert button to get result properly"></i> 
+                    </span> 
+                    : {{conversionResult ? conversionResult : '0.00' }} {{symbolValue}}
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-primary">More details</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
