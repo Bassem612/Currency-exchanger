@@ -9,13 +9,18 @@ import { CurrencyExchnageService } from 'src/app/services/currency-exchnage.serv
 export class MostPopularCurrenciesComponent implements OnInit {
 
   exchnageDataObject!: {base: string, amount: number, unit: number};
-  ratesArray!: any; 
+  ratesArray!: [string, number][]; 
+  allCurrencies!: [string, number][];
+  symbolValue!: number;
+  baseValue!: number;
+
 
   constructor(private currencyExchnageService: CurrencyExchnageService){}
 
   ngOnInit() {
     this.getMostPopularCurrencies();
     this.getExchangeData();
+    this.getAllCurrencies();
   }
 
 
@@ -31,8 +36,29 @@ export class MostPopularCurrenciesComponent implements OnInit {
     this.currencyExchnageService.exchangeDataSubject.subscribe((res: any) => {
       this.exchnageDataObject = res;
       console.log(this.exchnageDataObject);
-      
     });
   }
 
+  private getAllCurrencies() {
+    this.currencyExchnageService.getAllCurrencies().subscribe((res: any) => {
+      this.allCurrencies = Object.entries(res.rates);
+      console.log(this.allCurrencies);
+    });
+  }
+
+
+  getcurrentRateValue(baseKey: string, symbolKey: string) {
+    this.baseValue = this.allCurrencies.filter(array => {
+      return array[0] === baseKey;
+    })[0][1];
+
+    this.symbolValue = this.ratesArray.filter(array => {
+      return array[0] === symbolKey;
+    })[0][1];
+
+    return this.symbolValue /  this.baseValue;
 }
+
+}
+
+

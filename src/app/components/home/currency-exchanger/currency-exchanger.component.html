@@ -14,7 +14,6 @@
                             type="number"
                             min="1"
                             (change)="getCurrentAmount($event)"
-                            pattern="[0-9]+"
                          >
                         <span 
                            *ngIf="!conversionForm['controls']['amount'].value"
@@ -28,19 +27,42 @@
                 <div class="col-9 d-inline-flex">
                     <div class="col-3">
                         <label for="from">Form</label>
-                        <select formControlName="base" class="form-select" aria-label="Default select example">
-                            <option [value]="baseValue" selected> {{baseValue}} </option>
+                        <select 
+                            formControlName="base"
+                            class="form-select cursor-pointer"
+                            aria-label="Disabled select example"
+                            (change)="onChangeBaseName()"
+                            >
+                            <!-- <option [value]="baseValue" selected> {{baseValue}} </option> -->
+                            <option 
+                             *ngFor="let currency of allCurrencies"
+                             [selected]="baseName === currency[0]"
+                             >
+                                {{ currency[0] }}
+                            </option>
                         </select>
                     </div>
 
                     <div class="align-self-end col-2 fs-3 text-center">
-                        <i (click)="onSwapCurrencies()" class="fa fa-exchange cursor-pointer" aria-hidden="true"></i>
+                        <i 
+                        (click)="onSwapCurrencies()"
+                        class="fa fa-exchange cursor-pointer"
+                        [ngClass]="{'cursor-not-allowed' : !conversionForm['controls']['amount'].valid}"
+                        aria-hidden="true"></i>
                     </div>
 
                     <div class="col-3">
                         <label for="to">To</label>
-                        <select formControlName="symbol" class="form-select" aria-label="Default select example">
-                            <option [value]="symbolValue" selected> {{symbolValue}} </option>
+                        <select 
+                            formControlName="symbol"
+                            class="form-select cursor-pointer"
+                            aria-label="Default select example"
+                            (change)="onChangeSymbolName()"
+                            >
+                            <!-- <option [value]="symbolValue" selected> {{symbolValue}} </option> -->
+                            <option *ngFor="let currency of allCurrencies" [selected]="symbolName === currency[0]" >
+                                {{ currency[0] }}
+                            </option>
                         </select>
                     </div>
                     <div class="col-3 text-center align-self-end">
@@ -50,16 +72,14 @@
             </div>
             <hr>
             <div class="row mt-4 align-items-center">
-                <div class="col-3">
-                   <span class="text-success">Unit</span>: 1.00 {{baseValue}} = {{oneUnitValue}} {{symbolValue}}
+                <div class="col-4" *ngIf="oneUnitValue">
+                   <span>Unit</span>: 1.00 {{baseName}} = <span class="badge bg-info"> {{oneUnitValue.toFixed(3)}} </span>
                 </div>
-                <div class="col-3">
-                    <span class="text-success">
-                        Result <i *ngIf="!conversionResult" class="fa fa-exclamation-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="You must press on convert button to get result properly"></i> 
-                    </span> 
-                    : {{conversionResult ? conversionResult : '0.00' }} {{symbolValue}}
+                <div class="col-4" *ngIf="conversionResult">
+                    <span class="text-success"> Result: </span> 
+                    <span class="badge bg-success">{{conversionResult.toFixed(3)}}</span>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <button class="btn btn-primary">More details</button>
                 </div>
             </div>

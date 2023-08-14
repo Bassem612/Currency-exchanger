@@ -4,9 +4,7 @@
     <div class="boxes">
         <div class="row">
             <div class="col-3 box" *ngFor="let rate of ratesArray">
-                <span *ngIf="exchnageDataObject.base === 'EUR'">{{rate[0]}}: {{ (rate[1] * exchnageDataObject.amount).toFixed(2) }}</span>
-                <span *ngIf="exchnageDataObject.base === 'USD'">{{rate[0]}}: {{ ((rate[1] / exchnageDataObject.unit) * exchnageDataObject.amount).toFixed(2) }}</span>
-            </div>
+                <span *ngIf="allCurrencies?.length" >{{rate[0]}}: {{(getcurrentRateValue(exchnageDataObject.base, rate[0]) * exchnageDataObject.amount ).toFixed(3)}}</span>
         </div>
     </div>
 </div>
