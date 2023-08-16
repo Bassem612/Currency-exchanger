@@ -216,7 +216,10 @@ export class CurrencyExchangerComponent implements OnInit, AfterContentInit {
        : this.conversionForm['controls']['base'].disable();
       this.conversionForm['controls']['symbol'].enable();
     }
-    
+  }
+
+  blockChars(event: any) {
+    ["e", "E", "+", "-"].includes(event.key) && event.preventDefault()
   }
 
   onChangeBaseName() {

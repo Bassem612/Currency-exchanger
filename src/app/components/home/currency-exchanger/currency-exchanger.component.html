@@ -25,6 +25,7 @@
                             type="number"
                             min="1"
                             (change)="getCurrentAmount($event)"
+                            (keydown)="blockChars($event)"
                          >
                         <span 
                            *ngIf="!conversionForm['controls']['amount'].value"
