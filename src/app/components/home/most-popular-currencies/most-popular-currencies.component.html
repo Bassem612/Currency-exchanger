@@ -1,7 +1,9 @@
 <div>
     <h3>Most popular currencies compared to {{exchnageDataObject.base}} </h3>
+    
+    <app-spinner *ngIf="loader"></app-spinner>
 
-    <div class="boxes">
+    <div class="boxes" *ngIf="!loader">
         <div class="row">
             <div class="col-3 box" *ngFor="let rate of ratesArray">
                 <span *ngIf="allCurrencies?.length" >{{rate[0]}}: {{(getcurrentRateValue(exchnageDataObject.base, rate[0]) * exchnageDataObject.amount ).toFixed(3)}}</span>

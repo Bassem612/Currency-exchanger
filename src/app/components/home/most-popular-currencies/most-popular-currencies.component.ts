@@ -13,6 +13,7 @@ export class MostPopularCurrenciesComponent implements OnInit {
   allCurrencies!: [string, number][];
   symbolValue!: number;
   baseValue!: number;
+  loader: boolean = false
 
 
   constructor(private currencyExchnageService: CurrencyExchnageService){}
@@ -40,7 +41,9 @@ export class MostPopularCurrenciesComponent implements OnInit {
   }
 
   private getAllCurrencies() {
+    this.loader = true;
     this.currencyExchnageService.getAllCurrencies().subscribe((res: any) => {
+      this.loader = false;
       this.allCurrencies = Object.entries(res.rates);
       console.log(this.allCurrencies);
     });

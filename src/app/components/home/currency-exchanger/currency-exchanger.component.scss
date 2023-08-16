@@ -18,3 +18,19 @@ input[type=number] {
 .cursor-not-allowed {
   cursor: not-allowed;
 }
+
+select, 
+#amount {
+  width: 180px;
+}
+
+@media (max-width: 991.98px) {
+  .convert-btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  #amount {
+    width: 100%;
+  }
+}

@@ -11,6 +11,7 @@ import { MostPopularCurrenciesComponent } from './components/home/most-popular-c
 import { ReactiveFormsModule } from '@angular/forms';
 import { DetailsComponent } from './components/details/details.component';
 import { AppRoutingModule } from './app-routing.module';
+import { SpinnerComponent } from './components/shared/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AppRoutingModule } from './app-routing.module';
     NavbarComponent,
     CurrencyExchangerComponent,
     MostPopularCurrenciesComponent,
-    DetailsComponent
+    DetailsComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
