@@ -10,6 +10,8 @@ export class CurrencyExchnageService {
   baseUrl: string = 'http://data.fixer.io/api/';
 
   exchangeDataSubject = new BehaviorSubject({});
+  currencyConfigSubject = new BehaviorSubject({});
+  getSelectedDetailsPage = new BehaviorSubject({})
 
   constructor(private http: HttpClient) {}
 
@@ -24,5 +26,11 @@ export class CurrencyExchnageService {
   getMostPopularCurrencies() {
     return this.http.get(`${this.baseUrl}latest?access_key=${this.apiKey}&symbols=USD,AUD,CAD,PLN,MXN,JPY,GBP,EGP,KWD`);
   }
+
+  // getFullNameCurrencies() {
+  //   return this.http.get(`https://data.fixer.io/api/symbols?access_key=${this.apiKey}`);
+  // }
+
+
 
 }

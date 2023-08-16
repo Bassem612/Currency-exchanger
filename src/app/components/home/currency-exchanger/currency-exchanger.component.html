@@ -1,5 +1,16 @@
 <div>
-    <h3>Currency Exchanger</h3>
+    <div class="d-flex justify-content-between my-2">
+        <h3> {{currentRoute === 'home' ? 'Currency Exchanger' :  conversionForm['controls']['base'].value }}</h3>
+        <button 
+           *ngIf="currentRoute === 'details'"
+           (click) ="onNavigateToHome()" 
+            routerLink="/"
+            class="btn btn-primary"
+            type="button"
+            >
+            Back to home
+       </button>
+    </div>
 
     <div>
         <form [formGroup]="conversionForm" (ngSubmit)="onConvert()">
@@ -36,7 +47,7 @@
                             <!-- <option [value]="baseValue" selected> {{baseValue}} </option> -->
                             <option 
                              *ngFor="let currency of allCurrencies"
-                             [selected]="baseName === currency[0]"
+                             [selected]="conversionForm['controls']['base'].value === currency[0]"
                              >
                                 {{ currency[0] }}
                             </option>
@@ -60,7 +71,9 @@
                             (change)="onChangeSymbolName()"
                             >
                             <!-- <option [value]="symbolValue" selected> {{symbolValue}} </option> -->
-                            <option *ngFor="let currency of allCurrencies" [selected]="symbolName === currency[0]" >
+                            <option 
+                            *ngFor="let currency of allCurrencies"
+                            [selected]="conversionForm['controls']['symbol'].value === currency[0]" >
                                 {{ currency[0] }}
                             </option>
                         </select>
@@ -73,14 +86,22 @@
             <hr>
             <div class="row mt-4 align-items-center">
                 <div class="col-4" *ngIf="oneUnitValue">
-                   <span>Unit</span>: 1.00 {{baseName}} = <span class="badge bg-info"> {{oneUnitValue.toFixed(3)}} </span>
+                   <span>Unit</span>: 1.00 {{conversionForm['controls']['base'].value}} = <span class="badge bg-info"> {{oneUnitValue.toFixed(3)}} </span>
                 </div>
                 <div class="col-4" *ngIf="conversionResult">
                     <span class="text-success"> Result: </span> 
                     <span class="badge bg-success">{{conversionResult.toFixed(3)}}</span>
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-primary">More details</button>
+                    <button 
+                    *ngIf="currentRoute === 'home'"
+                    (click)="onNavigateToDetails()"
+                     routerLink="/details"
+                     class="btn btn-primary"
+                     type="button"
+                     >
+                     More details
+                    </button>
                 </div>
             </div>
         </form>

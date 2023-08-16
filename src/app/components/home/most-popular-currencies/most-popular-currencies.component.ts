@@ -52,9 +52,10 @@ export class MostPopularCurrenciesComponent implements OnInit {
       return array[0] === baseKey;
     })[0][1];
 
+
     this.symbolValue = this.ratesArray.filter(array => {
       return array[0] === symbolKey;
-    })[0][1];
+    })[0][1];    
 
     return this.symbolValue /  this.baseValue;
 }

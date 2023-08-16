@@ -5,8 +5,18 @@
       </a>
 
       <div class="nav-btns">
-        <button class="btn btn-primary me-3">EUR-USD Details</button>
-        <button class="btn btn-primary">EUR-GBP Details</button>
+        <button
+          [routerLink]="['/details', 'EUR-USD']"
+          class="btn btn-primary me-3"
+          >
+          EUR-USD Details
+        </button>
+        <button 
+        [routerLink]="['/details', 'EUR-GBP']"
+        class="btn btn-primary"
+        >
+         EUR-GBP Details
+        </button>
       </div>
     </div>
 </nav>

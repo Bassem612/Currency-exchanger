@@ -1,54 +1,111 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterContentInit, Component, OnInit } from '@angular/core';
 import { CurrencyExchnageService } from 'src/app/services/currency-exchnage.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-currency-exchanger',
   templateUrl: './currency-exchanger.component.html',
   styleUrls: ['./currency-exchanger.component.scss']
 })
-export class CurrencyExchangerComponent implements OnInit {
+export class CurrencyExchangerComponent implements OnInit, AfterContentInit {
 
   //UI
   allCurrencies!: [string, number][];
-  currentAmount: number = 1;
-  baseName: string = "EUR";
-  symbolName: string = "USD";
+  currentAmount!: number;
+  baseName!: string;
+  symbolName!: string;
   baseValue!: number;
   symbolValue!: number;
   oneUnitValue!: number;
   costantEURTOUSDRatio!: number;
   conversionResult!: number;
+  currentRoute!: string
+  selectedCurrenciesDetails!: string;
 
   // Form
   conversionForm!: FormGroup;
 
   constructor(
     private currencyExchnageService: CurrencyExchnageService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
   ){}
 
   ngOnInit() {
+    this.checkRoute();
     this.initForm();
     this.getEURToUSD();
     this.getAllCurrencies();
-  }
 
-
-  private initForm() {
-    this.conversionForm = this.formBuilder.group({
-      amount: [1, [Validators.required]],
-      base: [''],
-      symbol: [''],
+  // do this in a seprate function
+  this.conversionForm.valueChanges.subscribe((val: any) => {
+      this.setSessionStorage(val);
     });
   }
 
+  // do this in a seprate function
+  setSessionStorage( newValue: any ): void {    
+    sessionStorage.setItem('amount', newValue.amount);
+    sessionStorage.setItem('base', newValue.base);
+    sessionStorage.setItem('symbol', newValue.symbol);
+  }  
+
+  private initForm() {
+    let initAmount = sessionStorage.getItem('amount') ? +sessionStorage.getItem('amount')! : 1;  
+    let initBase = sessionStorage.getItem('base') ? sessionStorage.getItem('base') : 'EUR';  
+    let initSymbol = sessionStorage.getItem('symbol') ? sessionStorage.getItem('symbol') : 'USD'; 
+
+    this.conversionForm = this.formBuilder.group({
+      amount: [initAmount, [Validators.required]],
+      base: [initBase],
+      symbol: [initSymbol],
+    });
+    
+
+    if(this.currentRoute === 'details') {
+      this.conversionForm['controls']['base'].disable();
+    }
+  }
+
+
+  ngAfterContentInit() {
+    this.goToPredefinedDetails()
+  }
+
+  private goToPredefinedDetails() {
+    // EUR-USD
+    this.route.params.subscribe((params: any) => {  
+      console.log(params?.selectedCurrencies);
+      
+      if(params?.selectedCurrencies) {
+        let selectedCurrencies = params.selectedCurrencies.split('-');
+        console.log(selectedCurrencies);
+        
+        this.conversionForm.setValue({
+          amount: 1,
+          base: selectedCurrencies[0],
+          symbol: selectedCurrencies[1]
+        });
+        setTimeout(() => {
+          this.onChangeBaseName();
+          this.onChangeSymbolName();
+        }, 500);
+      }                  
+  });
+  }
+
+
+
+
   private initExchnageData() {
     this.currencyExchnageService.exchangeDataSubject.next({
-      base: this.baseName,
-      amount: this.currentAmount,
+      base: this.conversionForm['controls']['base'].value,
+      amount: this.conversionForm['controls']['amount'].value,
       unit: this.oneUnitValue
-    })
+    });
+    
   }
 
   private getAllCurrencies() {
@@ -56,6 +113,27 @@ export class CurrencyExchangerComponent implements OnInit {
       this.allCurrencies = Object.entries(res.rates);
       console.log(this.allCurrencies);
     });
+  }
+
+
+  private checkRoute() {
+     if(this.router.url === '/') {
+      this.currentRoute = 'home'
+     } else {
+      this.currentRoute = 'details'
+     }
+  }
+
+
+
+
+  onNavigateToDetails() {
+    sessionStorage.setItem('unit', JSON.stringify(this.oneUnitValue));
+    console.log(this.oneUnitValue);
+  }
+
+  onNavigateToHome() {
+    sessionStorage.clear();
   }
 
 
@@ -71,10 +149,17 @@ export class CurrencyExchangerComponent implements OnInit {
       console.log(this.symbolName);
 
       const values: number[] = Object.values(res.rates);
-      this.oneUnitValue = values[0];
-      this.conversionResult = values[0];
-      this.costantEURTOUSDRatio = this.oneUnitValue;
-      console.log(this.oneUnitValue);
+      if(this.currentRoute === 'details') {
+        this.oneUnitValue = +sessionStorage.getItem('unit')!
+        console.log(this.oneUnitValue);
+        this.conversionResult = this.oneUnitValue;
+
+      } else {
+        this.oneUnitValue = values[0];
+        this.conversionResult =  this.oneUnitValue;
+        this.costantEURTOUSDRatio = this.oneUnitValue;
+        console.log(this.oneUnitValue);
+      }
     });
 
     this.initExchnageData();
@@ -97,8 +182,12 @@ export class CurrencyExchangerComponent implements OnInit {
 
     } else {
       this.symbolValue = filteredValue;
+      console.log(this.symbolValue);
+      
 
       if(this.baseValue) {
+        console.log(this.baseValue);
+
         this.oneUnitValue = this.symbolValue /  this.baseValue;
         this.conversionResult = this.oneUnitValue;
        }else {
@@ -122,15 +211,20 @@ export class CurrencyExchangerComponent implements OnInit {
           this.conversionForm['controls']['base'].disable();
           this.conversionForm['controls']['symbol'].disable();
     }else {
-      this.conversionForm['controls']['base'].enable();
+      this.currentRoute === 'home' 
+       ? this.conversionForm['controls']['base'].enable()
+       : this.conversionForm['controls']['base'].disable();
       this.conversionForm['controls']['symbol'].enable();
     }
+    
   }
 
   onChangeBaseName() {
     let currentBaseName = this.conversionForm['controls']['base'].value;
     console.log(currentBaseName);
     this.baseName = currentBaseName;
+    console.log(this.baseName);
+    
     this.getcurrentRateValue(this.baseName, 'base');
   }
 
@@ -145,26 +239,18 @@ export class CurrencyExchangerComponent implements OnInit {
 
     if(!this.conversionForm['controls']['amount'].valid) {
       return;
-    }
+    } 
 
-
-    let willBeSymbolName = this.baseName;
-    let willBeBaseName = this.symbolName;
-
-    this.baseName = willBeBaseName;
-    this.symbolName = willBeSymbolName;
-    console.log(this.baseName);
-    console.log(this.symbolName);
     this.conversionForm.patchValue({
-      base: this.baseName,
-      symbol: this.symbolName,
+      base: this.conversionForm['controls']['symbol'].value,
+      symbol: this.conversionForm['controls']['base'].value,
     });
 
     console.log(this.conversionForm.value);
     this.oneUnitValue = 1 / this.oneUnitValue;
     
-    this.getcurrentRateValue(this.baseName, 'base');
-    this.getcurrentRateValue(this.symbolName, 'symbol');
+    this.getcurrentRateValue(this.conversionForm['controls']['base'].value, 'base');
+    this.getcurrentRateValue(this.conversionForm['controls']['symbol'].value, 'symbol');
 
 
     this.onConvert();
@@ -172,10 +258,8 @@ export class CurrencyExchangerComponent implements OnInit {
 
 
   onConvert() {
-    console.log(this.conversionForm.value);
-
     if (this.conversionForm.valid) {
-      this.conversionResult = this.oneUnitValue * this.currentAmount;
+      this.conversionResult = this.oneUnitValue * this.conversionForm['controls']['amount'].value;
       this.initExchnageData();
     }
   }
