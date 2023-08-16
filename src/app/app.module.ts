@@ -12,6 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DetailsComponent } from './components/details/details.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SpinnerComponent } from './components/shared/spinner/spinner.component';
+import { PageNotFoundComponent } from './components/shared/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { SpinnerComponent } from './components/shared/spinner/spinner.component'
     CurrencyExchangerComponent,
     MostPopularCurrenciesComponent,
     DetailsComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
