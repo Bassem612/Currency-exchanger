@@ -59,7 +59,7 @@
                         <i 
                         (click)="onSwapCurrencies()"
                         class="fa fa-exchange cursor-pointer"
-                        [ngClass]="{'cursor-not-allowed' : !conversionForm['controls']['amount'].valid}"
+                        [ngClass]="{'cursor-not-allowed' : !conversionForm['controls']['amount'].valid || currentRoute === 'details'}"
                         aria-hidden="true"></i>
                     </div>
 

@@ -51,14 +51,26 @@ export class MostPopularCurrenciesComponent implements OnInit {
 
 
   getcurrentRateValue(baseKey: string, symbolKey: string) {
-    this.baseValue = this.allCurrencies.filter(array => {
-      return array[0] === baseKey;
-    })[0][1];
 
+    if(baseKey) {
+      this.baseValue = this.allCurrencies.filter(array => {
+        return array[0] === baseKey;
+      })[0][1];
+    } else {
+      this.baseValue = this.allCurrencies.filter(array => {
+        return array[0] === 'EUR';
+      })[0][1];
+    }
 
-    this.symbolValue = this.ratesArray.filter(array => {
-      return array[0] === symbolKey;
-    })[0][1];    
+    if(symbolKey) {
+      this.symbolValue = this.ratesArray.filter(array => {
+        return array[0] === symbolKey;
+      })[0][1];  
+    } else {
+      this.symbolValue = this.ratesArray.filter(array => {
+        return array[0] === 'USD';
+      })[0][1];  
+    }
 
     return this.symbolValue /  this.baseValue;
 }
