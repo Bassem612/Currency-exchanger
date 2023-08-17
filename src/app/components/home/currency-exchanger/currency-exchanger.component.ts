@@ -22,6 +22,8 @@ export class CurrencyExchangerComponent implements OnInit, AfterContentInit {
   conversionResult!: number;
   currentRoute!: string
   selectedCurrenciesDetails!: string;
+  loader: boolean = false;
+
 
   // Form
   conversionForm!: FormGroup;
@@ -178,6 +180,7 @@ export class CurrencyExchangerComponent implements OnInit, AfterContentInit {
   // }
 
   getcurrentRateValue(basekey: string, symbolkey: string) {
+    this.loader = true;
 
     setTimeout(() => {
       let filteredBaseValue = this.allCurrencies.filter(array => {
@@ -196,7 +199,8 @@ export class CurrencyExchangerComponent implements OnInit, AfterContentInit {
        ? +sessionStorage.getItem('unit')! 
        : filteredSymbolValue / filteredBaseValue;
       this.conversionResult = this.oneUnitValue;
-    }, 500)
+      this.loader = false;
+    }, 1000)
     
     
 

@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!loader">
     <div class="d-flex justify-content-between my-2">
         <h3> {{currentRoute === 'home' ? 'Currency Exchanger' :  conversionForm['controls']['base'].value }}</h3>
         <button 
@@ -108,3 +108,5 @@
         </form>
     </div>
 </div>
+
+<app-spinner *ngIf="loader" ></app-spinner>

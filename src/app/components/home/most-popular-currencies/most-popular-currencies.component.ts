@@ -13,7 +13,7 @@ export class MostPopularCurrenciesComponent implements OnInit {
   allCurrencies!: [string, number][];
   symbolValue!: number;
   baseValue!: number;
-  loader: boolean = false
+  loader: boolean = false;
 
 
   constructor(private currencyExchnageService: CurrencyExchnageService){}
