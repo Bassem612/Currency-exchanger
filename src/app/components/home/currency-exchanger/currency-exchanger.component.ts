@@ -2,6 +2,7 @@ import { AfterContentInit, Component, OnInit } from '@angular/core';
 import { CurrencyExchnageService } from 'src/app/services/currency-exchnage.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
+import { formData } from 'src/app/interfaces/form-data..model';
 
 @Component({
   selector: 'app-currency-exchanger',
@@ -75,7 +76,7 @@ export class CurrencyExchangerComponent implements OnInit, AfterContentInit {
     });
   }
 
-  setSessionStorage(newValue: any): void {
+  setSessionStorage(newValue: formData) {
     sessionStorage.setItem('amount', newValue.amount);
     sessionStorage.setItem('base', newValue.base);
     sessionStorage.setItem('symbol', newValue.symbol);
