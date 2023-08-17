@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +13,16 @@ export class CurrencyExchnageService {
   exchangeDataSubject = new BehaviorSubject({});
 
   getAllCurrencies() {
-    return this.http.get(`${this.baseUrl}latest?access_key=${this.apiKey}`);
+   return this.http.get(`${this.baseUrl}latest?access_key=${this.apiKey}`)
+    .pipe(map((res:any) => {
+     return Object.entries(res.rates);
+    }));
   }
 
   getMostPopularCurrencies() {
-    return this.http.get(`${this.baseUrl}latest?access_key=${this.apiKey}&symbols=USD,AUD,CAD,PLN,MXN,JPY,GBP,EGP,KWD`);
+    return this.http.get(`${this.baseUrl}latest?access_key=${this.apiKey}&symbols=USD,AUD,CAD,PLN,MXN,JPY,GBP,EGP,KWD`)
+    .pipe(map((res:any) => {
+      return Object.entries(res.rates);
+     }));
   }
 }

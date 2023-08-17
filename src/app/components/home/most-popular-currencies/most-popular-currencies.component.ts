@@ -25,7 +25,7 @@ export class MostPopularCurrenciesComponent implements OnInit {
 
   private getMostPopularCurrencies() {
     this.currencyExchnageService.getMostPopularCurrencies().subscribe((res: any) => {
-      this.ratesArray = Object.entries(res.rates);
+      this.ratesArray = res;
     });
   }
 
@@ -39,7 +39,7 @@ export class MostPopularCurrenciesComponent implements OnInit {
     this.loader = true;
     this.currencyExchnageService.getAllCurrencies().subscribe((res: any) => {
       this.loader = false;
-      this.allCurrencies = Object.entries(res.rates);
+      this.allCurrencies = res
     });
   }
 

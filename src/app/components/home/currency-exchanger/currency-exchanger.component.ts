@@ -113,7 +113,7 @@ export class CurrencyExchangerComponent implements OnInit, AfterContentInit {
 
   private getAllCurrencies() {
     this.currencyExchnageService.getAllCurrencies().subscribe((res: any) => {
-      this.allCurrencies = Object.entries(res.rates);
+      this.allCurrencies = res;
     });
   }
 
